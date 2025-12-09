@@ -8,13 +8,13 @@ on:
 
 env:
   PROJECT_DIR: './my-app'
-  DEPLOY_DIR: '/var/www/html/good-kitty'
+  DEPLOY_DIR: '/usr/share/nginx/html/good-kitty'
 
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # 安装pnpm
       - uses: pnpm/action-setup@v2
@@ -22,7 +22,7 @@ jobs:
           version: 10.13.1
 
       # 安装node
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 22.17.1
           cache: 'pnpm'
@@ -40,7 +40,7 @@ jobs:
       
       # 上传构建产物
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: ${{ env.PROJECT_DIR }}/dist/
@@ -54,7 +54,7 @@ jobs:
     steps:
       # 下载构建产物
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dist
           path: ./deploy-dist  # 下载到临时目录
@@ -63,9 +63,9 @@ jobs:
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@v4
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.GOOD_KITTY_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.GOOD_KITTY_SSH_HOST }}
+          REMOTE_USER: ${{ secrets.GOOD_KITTY_SSH_USER }}
           TARGET: ${{ env.DEPLOY_DIR }}
           SOURCE: ./deploy-dist/
 
@@ -84,7 +84,7 @@ jobs:
             
             # 设置文件权限（重要！）
             echo "设置文件权限..."
-            sudo chown -R www-data:www-data ${{ env.DEPLOY_DIR }} || true
+            sudo chown -R nginx:nginx ${{ env.DEPLOY_DIR }} || true
             sudo chmod -R 755 ${{env.DEPLOY_DIR}} || true
             
             echo "检查部署结果:"
