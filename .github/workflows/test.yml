@@ -1,0 +1,13 @@
+name: test secrets
+on: workflow_dispatch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show Secrets (for debugging)
+        run: |
+          echo "SSH_USER: ${{ secrets.SSH_USER }}"
+          echo "SSH_HOST: ${{ secrets.SSH_HOST }}"
+          # 不显示私钥，因为太长
+          echo "SSH_PRIVATE_KEY is set: ${{ secrets.SSH_PRIVATE_KEY != '' }}"
