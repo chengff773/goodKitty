@@ -3,7 +3,7 @@
  */
 
 import Chat from '../chat';
-import Lazyload from '../lazyload';
+// import Lazyload from '../lazyload';
 import './style.less'
 
 const Entry = () => {
