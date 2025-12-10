@@ -3,7 +3,7 @@
  */
 
 import {WarningOutlined} from '@ant-design/icons';
-import headImg from '@/assets/images/logo.jpg';
+import headImg from '@/assets/images/logo.png';
 import useStore from "@/stores";
 import './style.less';
 
