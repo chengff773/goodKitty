@@ -12,7 +12,7 @@ jobs:
           # 不显示私钥，因为太长
           echo "SSH_PRIVATE_KEY is set: ${{ secrets.GOOD_KITTY_PRIVATE_KEY != '' }}"
       
-      - name: 测试 SSH 连通性（详细日志）
+      - name: test SSH connection
         run: |
           # 配置私钥
           mkdir -p /home/runner/.ssh
