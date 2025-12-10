@@ -9,6 +9,7 @@ on:
 env:
   PROJECT_DIR: './my-app'
   DEPLOY_DIR: '/usr/share/nginx/html/good-kitty'
+  RSYNC_STDOUT: "/var/log/rsync/good-kitty.log" # 用于调试的日志文件
 
 jobs:
   test-and-build:
