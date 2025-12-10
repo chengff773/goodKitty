@@ -36,7 +36,7 @@ jobs:
           
           # 测试密钥解析
           echo "=== Testing key with ssh-keygen ==="
-          ssh-keygen -l -f test_key 2>&1 || echo "密钥解析失败"
+          ssh-keygen -l -f test_key 2>&1 || echo "❌ 密钥解析失败"
           
           # 清理
           rm test_key
@@ -46,7 +46,14 @@ jobs:
           # 配置私钥
           mkdir -p /home/runner/.ssh
           echo "${{ secrets.GOOD_KITTY }}" > /home/runner/.ssh/deploy_key
+
+          # 配置&检查目录权限
           chmod 600 /home/runner/.ssh/deploy_key
+          ls -la /home/runner/.ssh/
+          chmod 700 /home/runner/.ssh/
+          ls -la /home/runner/.ssh/deploy_key
+          echo "权限: $(stat -c %a /home/runner/.ssh/deploy_key)"
+
           # 开启 SSH 详细日志（-vvv），测试连接
           ssh -vvv -i /home/runner/.ssh/deploy_key \
             -o StrictHostKeyChecking=no \
