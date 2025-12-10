@@ -59,6 +59,16 @@ jobs:
           name: dist
           path: ./deploy-dist  # 下载到临时目录
 
+      # 配置 SSH 密钥
+      - name: Setup SSH Key Properly
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          
+          # 创建正确的密钥文件
+          echo "${{ secrets.GOOD_KITTY_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
       # 部署到服务器
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@v4
@@ -68,7 +78,6 @@ jobs:
           REMOTE_USER: ${{ secrets.GOOD_KITTY_SSH_USER }}
           TARGET: ${{ env.DEPLOY_DIR }}
           SOURCE: ./deploy-dist/
-          KEY_NAME: 'good-kitty'
 
           # 部署脚本
           SCRIPT_BEFORE: |
