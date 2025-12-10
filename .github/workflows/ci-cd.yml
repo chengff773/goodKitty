@@ -68,7 +68,7 @@ jobs:
           REMOTE_USER: ${{ secrets.GOOD_KITTY_SSH_USER }}
           TARGET: ${{ env.DEPLOY_DIR }}
           SOURCE: ./deploy-dist/
-          KEYNAME: 'good-kitty'
+          KEY_NAME: 'good-kitty'
 
           # 部署脚本
           SCRIPT_BEFORE: |
