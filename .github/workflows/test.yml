@@ -11,3 +11,16 @@ jobs:
           echo "SSH_HOST: ${{ secrets.GOOD_KITTY_SSH_HOST }}"
           # 不显示私钥，因为太长
           echo "SSH_PRIVATE_KEY is set: ${{ secrets.GOOD_KITTY_PRIVATE_KEY != '' }}"
+      
+      - name: 测试 SSH 连通性（详细日志）
+        run: |
+          # 配置私钥
+          mkdir -p /home/runner/.ssh
+          echo "${{ secrets.GOOD_KITTY }}" > /home/runner/.ssh/deploy_key
+          chmod 600 /home/runner/.ssh/deploy_key
+          # 开启 SSH 详细日志（-vvv），测试连接
+          ssh -vvv -i /home/runner/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} \
+            "echo 'SSH 连接成功'"
