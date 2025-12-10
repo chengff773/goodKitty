@@ -78,6 +78,7 @@ jobs:
           REMOTE_USER: ${{ secrets.GOOD_KITTY_SSH_USER }}
           TARGET: ${{ env.DEPLOY_DIR }}
           SOURCE: ./deploy-dist/
+          SSH_CMD_ARGS: "-i ~/.ssh/deploy_key"
 
           # 部署脚本
           SCRIPT_BEFORE: |
