@@ -11,7 +11,7 @@ jobs:
           echo "SSH_HOST: ${{ secrets.GOOD_KITTY_SSH_HOST }}"
           # 不显示私钥，因为太长
           echo "SSH_PRIVATE_KEY is set: ${{ secrets.GOOD_KITTY_PRIVATE_KEY != '' }}"
-      
+    
       - name: test SSH connection
         run: |
           # 配置私钥
@@ -24,3 +24,32 @@ jobs:
             -o UserKnownHostsFile=/dev/null \
             ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} \
             "echo 'SSH 连接成功'"
+
+      - name: Debug SSH Key Content
+        run: |
+          # 写入密钥文件
+          echo "${{ secrets.GOOD_KITTY_PRIVATE_KEY }}" > test_key
+          chmod 600 test_key
+          
+          # 检查文件内容
+          echo "=== File size ==="
+          wc -c test_key
+          echo "=== First 3 lines ==="
+          head -3 test_key
+          echo "=== Last 3 lines ==="
+          tail -3 test_key
+          
+          # 检查密钥格式
+          echo "=== Key format check ==="
+          if head -1 test_key | grep -q "BEGIN.*PRIVATE KEY"; then
+            echo "✅ 密钥格式看起来正确"
+          else
+            echo "❌ 密钥格式可能有问题"
+          fi
+          
+          # 测试密钥解析
+          echo "=== Testing key with ssh-keygen ==="
+          ssh-keygen -l -f test_key 2>&1 || echo "密钥解析失败"
+          
+          # 清理
+          rm test_key
