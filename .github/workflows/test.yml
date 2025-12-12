@@ -57,6 +57,8 @@ jobs:
           ls -la /home/runner/.ssh/deploy_key
           echo "权限: $(stat -c %a /home/runner/.ssh/deploy_key)"
 
+          echo "服务器：${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }}"
+
           ssh -i /home/runner/.ssh/deploy_key \
             ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} \
             "echo test" || echo "❌ SSH 连接失败"
