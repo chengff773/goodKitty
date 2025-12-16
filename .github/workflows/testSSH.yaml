@@ -8,7 +8,7 @@ jobs:
     - name: Setup SSH Key
       run: |
         # 使用更可靠的方式写入密钥
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/deploy_key
+        echo "${{ secrets.GOOD_KITTY_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/deploy_key
         echo "" >> ~/.ssh/deploy_key
         
         # 修复权限
