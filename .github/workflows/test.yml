@@ -86,6 +86,55 @@ jobs:
           # 清理
           rm /tmp/test.key
 
+      - name: Deep Key Analysis
+        run: |
+          echo "=== 完整密钥内容分析 ==="
+          
+          # 写入密钥
+          echo "${{ secrets.GOOD_KITTY_PRIVATE_KEY }}" > /tmp/analysis.key
+          
+          echo "1. 显示完整内容（编码显示特殊字符）:"
+          cat -A /tmp/analysis.key
+          
+          echo -e "\n2. 逐行分析:"
+          line_num=1
+          while IFS= read -r line; do
+            echo "第 ${line_num} 行: 长度=${#line}, 内容开头='${line:0:20}'"
+            ((line_num++))
+          done < /tmp/analysis.key
+          
+          echo -e "\n3. 检查标记完整性:"
+          first_line=$(head -1 /tmp/analysis.key)
+          last_line=$(tail -1 /tmp/analysis.key)
+          
+          echo "第一行: '$first_line'"
+          echo "最后一行: '$last_line'"
+          
+          if [[ "$first_line" == "-----BEGIN OPENSSH PRIVATE KEY-----" ]]; then
+            echo "✅ BEGIN标记完整"
+          elif [[ "$first_line" == "-----BEGIN "* ]]; then
+            echo "⚠️  BEGIN标记不标准: $first_line"
+          else
+            echo "❌ BEGIN标记异常"
+          fi
+          
+          echo -e "\n4. Base64内容检查:"
+          # 提取中间的Base64内容
+          sed '1d;$d' /tmp/analysis.key > /tmp/base64.txt
+          echo "Base64行数: $(wc -l < /tmp/base64.txt)"
+          echo "Base64总长度: $(wc -c < /tmp/base64.txt)"
+          
+          # 尝试解码测试
+          if base64 -d /tmp/base64.txt > /tmp/decoded 2>/dev/null; then
+            echo "✅ Base64可以正常解码"
+            echo "解码后大小: $(wc -c < /tmp/decoded) 字节"
+          else
+            echo "❌ Base64解码失败"
+          fi
+          
+          # 清理
+          rm -f /tmp/analysis.key /tmp/base64.txt /tmp/decoded
+
       - name: test SSH connection
         run: |
           # 配置私钥
