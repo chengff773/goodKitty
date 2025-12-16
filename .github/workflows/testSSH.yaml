@@ -1,0 +1,39 @@
+name: Test SSH
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup SSH Key
+      run: |
+        # 使用更可靠的方式写入密钥
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/deploy_key
+        echo "" >> ~/.ssh/deploy_key
+        
+        # 修复权限
+        chmod 700 ~/.ssh
+        chmod 600 ~/.ssh/deploy_key
+        
+        # 验证密钥
+        if ! ssh-keygen -l -f ~/.ssh/deploy_key; then
+          echo "⚠️  密钥格式可能有问题，尝试修复..."
+          # 尝试转换为 PEM 格式
+          mv ~/.ssh/deploy_key ~/.ssh/deploy_key.bak
+          ssh-keygen -p -m PEM -f ~/.ssh/deploy_key.bak -N "" >/dev/null 2>&1
+          cp ~/.ssh/deploy_key.bak ~/.ssh/deploy_key
+        fi
+        
+    - name: Test Connection
+      run: |
+        # 先测试密钥本身
+        echo "=== 测试 SSH 密钥 ==="
+        ssh-keygen -l -f ~/.ssh/deploy_key
+        
+        echo "=== 尝试连接 ==="
+        # 尝试连接（设置超时）
+        timeout 10 ssh -o StrictHostKeyChecking=no \
+                       -o ConnectTimeout=5 \
+                       -o BatchMode=yes \
+                       -i ~/.ssh/deploy_key \
+                       root@8.141.119.102 "echo '连接成功！'"
