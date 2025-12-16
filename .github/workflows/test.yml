@@ -43,6 +43,48 @@ jobs:
           
           # 清理
           rm test_key
+      
+      - name: Check Key Format Details
+        run: |
+          echo "=== 详细检查密钥格式 ==="
+          
+          # 写入密钥
+          KEY_CONTENT="${{ secrets.GOOD_KITTY_PRIVATE_KEY }}"
+          echo "$KEY_CONTENT" > /tmp/test.key
+          
+          echo "1. 文件行数: $(wc -l < /tmp/test.key)"
+          echo "2. 文件大小: $(wc -c < /tmp/test.key) 字节"
+          
+          echo -e "\n3. 文件内容结构:"
+          echo "前10个字符: $(head -c 10 /tmp/test.key)"
+          echo "最后10个字符: $(tail -c 10 /tmp/test.key)"
+          
+          echo -e "\n4. 检查开始和结束标记:"
+          if head -1 /tmp/test.key | grep -q "BEGIN"; then
+            echo "✅ 第一行包含 BEGIN"
+          else
+            echo "❌ 第一行不包含 BEGIN"
+            echo "第一行内容: '$(head -1 /tmp/test.key)'"
+          fi
+          
+          if tail -1 /tmp/test.key | grep -q "END"; then
+            echo "✅ 最后一行包含 END"
+          else
+            echo "❌ 最后一行不包含 END"
+            echo "最后一行内容: '$(tail -1 /tmp/test.key)'"
+          fi
+          
+          echo -e "\n5. 显示首尾各3行:"
+          echo "--- 开始 ---"
+          head -3 /tmp/test.key
+          echo "--- 结束 ---"
+          tail -3 /tmp/test.key
+          
+          echo -e "\n6. 检查换行符类型:"
+          od -c /tmp/test.key | head -20 | grep -E "\\n|\\r"
+          
+          # 清理
+          rm /tmp/test.key
 
       - name: test SSH connection
         run: |
