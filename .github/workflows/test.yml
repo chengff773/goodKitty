@@ -138,8 +138,10 @@ jobs:
       - name: Test SSH Key Functionality
         run: |
           echo "=== 测试密钥功能 ==="
-          
+
           # 1. 写入密钥
+          mkdir -p /home/runner/.ssh
+          chmod 700 /home/runner/.ssh
           echo "${{ secrets.GOOD_KITTY_PRIVATE_KEY }}" > ~/.ssh/test_key
           chmod 600 ~/.ssh/test_key
           
@@ -187,8 +189,8 @@ jobs:
       - name: test SSH connection
         run: |
           # 配置私钥
-          mkdir -p /home/runner/.ssh
-          echo "${{ secrets.GOOD_KITTY }}" > /home/runner/.ssh/deploy_key
+          # mkdir -p /home/runner/.ssh
+          echo "${{ secrets.GOOD_KITTY_PRIVATE_KEY }}" > /home/runner/.ssh/deploy_key
 
           # 配置&检查目录权限
           chmod 600 /home/runner/.ssh/deploy_key
