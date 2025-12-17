@@ -200,11 +200,10 @@ jobs:
           echo "权限: $(stat -c %a /home/runner/.ssh/deploy_key)"
 
           # 添加主机密钥到 known_hosts
-          ssh-keyscan -H 8.141.119.102 >> ~/.ssh/known_hosts
+          ssh-keyscan -H "${{ secrets.GOOD_KITTY_SSH_HOST }}" >> ~/.ssh/known_hosts
 
           # 测试连接
-          # ssh -i /home/runner/.ssh/deploy_key root@8.141.119.102
-          #   # ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} \
+          # ssh -i /home/runner/.ssh/deploy_key ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} \
           #   "echo test" || echo "❌ SSH 连接失败"
 
           # 开启 SSH 详细日志（-vvv），测试连接
