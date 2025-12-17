@@ -74,6 +74,22 @@ jobs:
           # 添加主机密钥到 known_hosts
           ssh-keyscan -H "${{ secrets.GOOD_KITTY_SSH_HOST }}" >> ~/.ssh/known_hosts
 
+      # 部署前置校验脚本
+      - name: Run pre-deployment script
+        run: |
+          ssh -T -o StrictHostKeyChecking=no \
+              -i ~/.ssh/deploy_key \
+              ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} << 'EOF'
+            echo "=== 开始部署 good-kitty ==="
+            echo "时间: $(date)"
+            echo "提交: ${{ github.sha }}"
+            echo "部署目录: ${{ env.DEPLOY_DIR }}"
+            
+            # 确保目录存在
+            mkdir -p ${{ env.DEPLOY_DIR }}
+            echo "预部署准备完成"
+          EOF
+
       # 部署到服务器
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@v4
@@ -84,17 +100,16 @@ jobs:
           TARGET: ${{ env.DEPLOY_DIR }}
           SOURCE: ./deploy-dist/
           # SSH_CMD_ARGS: "-i ~/.ssh/deploy_key"
-          SSH_CMD_ARGS: "-o StrictHostKeyChecking=no -i ~/.ssh/deploy_key"
 
           # 部署脚本
-          SCRIPT_BEFORE: |
-            echo "=== 开始部署 good-kitty ==="
-            echo "时间: $(date)"
-            echo "提交: ${{ github.sha }}"
-            echo "部署目录: ${{ env.DEPLOY_DIR }}"
+          # SCRIPT_BEFORE: |
+          #   echo "=== 开始部署 good-kitty ==="
+          #   echo "时间: $(date)"
+          #   echo "提交: ${{ github.sha }}"
+          #   echo "部署目录: ${{ env.DEPLOY_DIR }}"
             
-            # 确保目录存在
-            mkdir -p ${{ env.DEPLOY_DIR }}
+          #   # 确保目录存在
+          #   mkdir -p ${{ env.DEPLOY_DIR }}
             
           SCRIPT_AFTER: |
             echo "=== 部署完成 ==="
