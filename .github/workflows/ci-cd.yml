@@ -64,34 +64,16 @@ jobs:
       # 配置 SSH 密钥
       - name: Setup SSH Key Properly
         run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+          mkdir -p /home/runner/.ssh
+          chmod 700 /home/runner/.ssh
           
           # 创建正确的密钥文件
           echo "${{ secrets.GOOD_KITTY_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+          ssh-keygen -l -f ~/.ssh/deploy_key
 
           # 添加主机密钥到 known_hosts
           ssh-keyscan -H ${{ secrets.GOOD_KITTY_SSH_HOST }} >> ~/.ssh/known_hosts
-
-      # 调试脚本内容
-      - name: Debug Script Content
-        run: |
-          echo "=== 检查要发送的脚本内容 ==="
-          if [ -f "local_ssh_script-before.sh" ]; then
-            echo "脚本存在，内容如下:"
-            cat -n local_ssh_script-before.sh
-            
-            # 检查可能的语法问题
-            echo -e "\n=== 语法检查 ==="
-            if bash -n local_ssh_script-before.sh; then
-              echo "✅ 脚本语法正确"
-            else
-              echo "❌ 脚本有语法错误"
-            fi
-          else
-            echo "❌ 脚本文件不存在: local_ssh_script-before.sh"
-          fi
 
       # 部署到服务器
       - name: Deploy to server
