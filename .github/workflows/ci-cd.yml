@@ -11,6 +11,7 @@ env:
   DEPLOY_DIR: '/usr/share/nginx/html/good-kitty'
   RSYNC_STDOUT: "/var/log/rsync/good-kitty/rsync.log" # 用于调试的日志文件
   # DEPLOY_KEY_NAME: 'good_kitty_deploy_key'
+  SSH_PRIVATE_KEY: ${{ secrets.GOOD_KITTY_PRIVATE_KEY }}
 
 jobs:
   test-and-build:
@@ -94,7 +95,7 @@ jobs:
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@v4
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.GOOD_KITTY_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ env.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.GOOD_KITTY_SSH_HOST }}
           REMOTE_USER: ${{ secrets.GOOD_KITTY_SSH_USER }}
           TARGET: ${{ env.DEPLOY_DIR }}
