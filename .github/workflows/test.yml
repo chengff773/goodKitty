@@ -135,56 +135,56 @@ jobs:
           # 清理
           rm -f /tmp/analysis.key /tmp/base64.txt /tmp/decoded
 
-      - name: Test SSH Key Functionality
-        run: |
-          echo "=== 测试密钥功能 ==="
+      # - name: Test SSH Key Functionality
+      #   run: |
+      #     echo "=== 测试密钥功能 ==="
 
-          # 1. 写入密钥
-          mkdir -p /home/runner/.ssh
-          chmod 700 /home/runner/.ssh
-          echo "${{ secrets.GOOD_KITTY_PRIVATE_KEY }}" > ~/.ssh/test_key
-          chmod 600 ~/.ssh/test_key
+      #     # 1. 写入密钥
+      #     mkdir -p /home/runner/.ssh
+      #     chmod 700 /home/runner/.ssh
+      #     echo "${{ secrets.GOOD_KITTY_PRIVATE_KEY }}" > ~/.ssh/test_key
+      #     chmod 600 ~/.ssh/test_key
           
-          echo "1. 检查密钥指纹:"
-          ssh-keygen -l -f ~/.ssh/test_key
+      #     echo "1. 检查密钥指纹:"
+      #     ssh-keygen -l -f ~/.ssh/test_key
           
-          echo -e "\n2. 生成公钥测试:"
-          # 从私钥生成公钥
-          ssh-keygen -y -f ~/.ssh/test_key > ~/.ssh/test_key.pub 2>&1 || echo "生成公钥失败"
+      #     echo -e "\n2. 生成公钥测试:"
+      #     # 从私钥生成公钥
+      #     ssh-keygen -y -f ~/.ssh/test_key > ~/.ssh/test_key.pub 2>&1 || echo "生成公钥失败"
           
-          if [ -f ~/.ssh/test_key.pub ]; then
-            echo "生成的公钥内容:"
-            cat ~/.ssh/test_key.pub
-          fi
+      #     if [ -f ~/.ssh/test_key.pub ]; then
+      #       echo "生成的公钥内容:"
+      #       cat ~/.ssh/test_key.pub
+      #     fi
           
-          echo -e "\n3. 测试密钥与服务器的兼容性:"
-          # 尝试不同的SSH选项
-          SSH_OPTIONS=(
-            ""
-            "-o PubkeyAcceptedAlgorithms=+ssh-rsa"
-            "-o HostKeyAlgorithms=+ssh-rsa"
-            "-o KexAlgorithms=diffie-hellman-group-exchange-sha256"
-          )
+      #     echo -e "\n3. 测试密钥与服务器的兼容性:"
+      #     # 尝试不同的SSH选项
+      #     SSH_OPTIONS=(
+      #       ""
+      #       "-o PubkeyAcceptedAlgorithms=+ssh-rsa"
+      #       "-o HostKeyAlgorithms=+ssh-rsa"
+      #       "-o KexAlgorithms=diffie-hellman-group-exchange-sha256"
+      #     )
           
-          for opts in "${SSH_OPTIONS[@]}"; do
-            echo -e "\n尝试选项: $opts"
-            timeout 10 ssh $opts \
-              -o StrictHostKeyChecking=no \
-              -o ConnectTimeout=5 \
-              -o BatchMode=yes \
-              -o LogLevel=ERROR \
-              -i ~/.ssh/test_key \
-              ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} \
-              "echo '连接成功'" 2>&1 | head -5 || true
-          done
+      #     for opts in "${SSH_OPTIONS[@]}"; do
+      #       echo -e "\n尝试选项: $opts"
+      #       timeout 10 ssh $opts \
+      #         -o StrictHostKeyChecking=no \
+      #         -o ConnectTimeout=5 \
+      #         -o BatchMode=yes \
+      #         -o LogLevel=ERROR \
+      #         -i ~/.ssh/test_key \
+      #         ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} \
+      #         "echo '连接成功'" 2>&1 | head -5 || true
+      #     done
           
-          echo -e "\n4. 详细调试输出（关键）:"
-          ssh -vvv \
-              -o BatchMode=yes \
-              -o ConnectTimeout=5 \
-              -i ~/.ssh/test_key \
-              ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} \
-              "exit" 2>&1 | grep -A10 -B5 "libcrypto\|Offering public key\|Authentication refused\|no mutual signature algorithm"
+      #     echo -e "\n4. 详细调试输出（关键）:"
+      #     ssh -vvv \
+      #         -o BatchMode=yes \
+      #         -o ConnectTimeout=5 \
+      #         -i ~/.ssh/test_key \
+      #         ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} \
+      #         "exit" 2>&1 | grep -A10 -B5 "libcrypto\|Offering public key\|Authentication refused\|no mutual signature algorithm"
 
       - name: test SSH connection
         run: |
