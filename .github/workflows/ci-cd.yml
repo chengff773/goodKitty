@@ -10,7 +10,7 @@ env:
   PROJECT_DIR: './my-app'
   DEPLOY_DIR: '/usr/share/nginx/html/good-kitty'
   RSYNC_STDOUT: "/var/log/rsync/good-kitty/rsync.log" # 用于调试的日志文件
-  DEPLOY_KEY_NAME: 'good_kitty_deploy_key'
+  # DEPLOY_KEY_NAME: 'good_kitty_deploy_key'
 
 jobs:
   test-and-build:
@@ -83,7 +83,7 @@ jobs:
           REMOTE_USER: ${{ secrets.GOOD_KITTY_SSH_USER }}
           TARGET: ${{ env.DEPLOY_DIR }}
           SOURCE: ./deploy-dist/
-          SSH_CMD_ARGS: "-i ~/.ssh/deploy_key"
+          # SSH_CMD_ARGS: "-i ~/.ssh/deploy_key"
 
           # 部署脚本
           SCRIPT_BEFORE: |
