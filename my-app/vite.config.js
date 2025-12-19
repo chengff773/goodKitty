@@ -10,7 +10,9 @@ export default defineConfig((command, mode) => {
   // const isStaging = mode === 'staging'
 
   return {
-    plugins: [react()],
+    plugins: [
+      react()
+    ],
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
@@ -30,11 +32,13 @@ export default defineConfig((command, mode) => {
           assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
           manualChunks: {
             'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-            'ui-vendor': ['antd'] // UI 库
+            'ui-vendor': ['antd'], // UI 库
+            'utils-vendor': ['lodash', 'axios']
           }
         }
       },
-      chunkSizeWarningLimit: 1000 // 提高警告限制
+      chunkSizeWarningLimit: 1000, // 提高警告限制
+      assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.webp', '**/*.avif']
     },
     css: {
       preprocessorOptions: {
