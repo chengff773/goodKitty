@@ -10,7 +10,6 @@ env:
   PROJECT_DIR: './my-app'
   DEPLOY_DIR: '/usr/share/nginx/html/good-kitty'
   RSYNC_STDOUT: "/var/log/rsync/good-kitty/rsync.log" # 用于调试的日志文件
-  # DEPLOY_KEY_NAME: 'good_kitty_deploy_key'
   SSH_PRIVATE_KEY: ${{ secrets.GOOD_KITTY_PRIVATE_KEY }}
 
 jobs:
@@ -105,35 +104,3 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ secrets.GOOD_KITTY_SSH_USER }}@${{ secrets.GOOD_KITTY_SSH_HOST }} \
             "sudo chown -R nginx:nginx ${{ env.DEPLOY_DIR }} && echo '权限设置成功'"
-
-      # 部署到服务器
-      # - name: Deploy to server
-      #   uses: easingthemes/ssh-deploy@v4
-      #   with:
-      #     SSH_PRIVATE_KEY: ${{ env.SSH_PRIVATE_KEY }}
-      #     REMOTE_HOST: ${{ secrets.GOOD_KITTY_SSH_HOST }}
-      #     REMOTE_USER: ${{ secrets.GOOD_KITTY_SSH_USER }}
-      #     TARGET: ${{ env.DEPLOY_DIR }}
-      #     SOURCE: ./deploy-dist/
-      #     # SSH_CMD_ARGS: "-i ~/.ssh/deploy_key"
-
-      #     # 部署脚本
-      #     # SCRIPT_BEFORE: |
-      #     #   echo "=== 开始部署 good-kitty ==="
-      #     #   echo "时间: $(date)"
-      #     #   echo "提交: ${{ github.sha }}"
-      #     #   echo "部署目录: ${{ env.DEPLOY_DIR }}"
-            
-      #     #   # 确保目录存在
-      #     #   mkdir -p ${{ env.DEPLOY_DIR }}
-            
-      #     SCRIPT_AFTER: |
-      #       echo "=== 部署完成 ==="
-            
-      #       # 设置文件权限（重要！）
-      #       echo "设置文件权限..."
-      #       sudo chown -R nginx:nginx ${{ env.DEPLOY_DIR }} || true
-      #       sudo chmod -R 755 ${{env.DEPLOY_DIR}} || true
-            
-      #       echo "检查部署结果:"
-      #       ls -la ${{ env.DEPLOY_DIR }}/ | head -10

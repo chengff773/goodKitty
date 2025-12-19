@@ -5,6 +5,7 @@
 import {WarningOutlined} from '@ant-design/icons';
 import headImg from '@/assets/images/logo.png';
 import useStore from "@/stores";
+import Image from '@/appComponents/Image';
 import './style.less';
 
 const WelcomeMsg = () => {
@@ -13,7 +14,7 @@ const WelcomeMsg = () => {
     } = useStore();
 
     return (<div className='welcome-card'>
-        <img src={headImg} className='welcome-img' />
+        <Image className='welcome-img' src={headImg} />
         <div className='welcome-msg'>
             <div>kitty kitty，很高兴为您服务</div>
             <div>我是您的专属助手小宝</div>

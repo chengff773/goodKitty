@@ -206,11 +206,11 @@ const Chat = forwardRef((props, ref) => {
                             }
                         </div>
                         <SplitLine time={memoryTime} />
-                        <WelcomeMsg />
                     </>
                 )
                 : null
             }
+            <WelcomeMsg />
             <div className="msg-list">
                 {
                     msgList.map(msgInfo => {
