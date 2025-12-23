@@ -23,7 +23,9 @@ const WebImage = (props) => {
                 alt={alt}
                 loading={loading}
                 decoding={decoding}
-                style="width: 100%;"
+                style={{
+                    width: '100%'
+                }}
             />
         </picture>
     )
