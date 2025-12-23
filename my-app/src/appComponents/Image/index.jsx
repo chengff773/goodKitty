@@ -1,30 +1,23 @@
-const Image = (props) => {
+import LocalImage from './components/localImage';
+import WebImage from './components/webImage';
+
+/**
+ * @param {*} props 
+ * imgName: 图片名称，渲染静态图片时使用
+ * imgUrl: 图片地址，渲染网络图片时使用
+ * alt: 图片的alt属性
+ * loading: 图片加载方式，默认lazy
+ * decoding: 图片解码方式，默认async
+ * @returns 
+ */
+const CustomImage = (props) => {
     const {
-        src = '',
-        alt = '',
-        className = '',
-        loading = 'lazy',
-        decoding = 'async'
+        imgName = ''
     } = props;
 
-    const imgUrl = src.split('.')[0];
-    const imgUrlAvif = `${imgUrl}.avif`;
-    const imgUrlWebp = `${imgUrl}.webp`;
-    const imgUrlPng = `${imgUrl}.png`;
-
     return (
-        <picture className={className}>
-            <source srcSet={imgUrlAvif} type="image/avif" />
-            <source srcSet={imgUrlWebp} type="image/webp" />
-            <source srcSet={imgUrlPng} type="image/png" />
-            <img
-                src={src}
-                alt={alt}
-                loading={loading}
-                decoding={decoding}
-            />
-        </picture>
+        imgName ? <LocalImage {...props} /> : <WebImage {...props} />
     )
 }
 
-export default Image;
+export default CustomImage;

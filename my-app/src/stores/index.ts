@@ -12,6 +12,7 @@ const store = zustandCreate(
             uploadInfo: null, // 上传文件信息
             inputDisabled: false, // 输入框是否禁用
             connectStatus: false, // 是否连接成功
+            localImgs: {}, // 本地图片缓存
             setSendTrigger: () => set((state: any) => ({
                 sendTrigger: state.sendTrigger + 1}
             )),
@@ -26,6 +27,9 @@ const store = zustandCreate(
             }),
             setConnectStatus: (status: boolean) => set({
                 connectStatus: status
+            }),
+            setLocalImgs: (imgs: {}) => set({
+                localImgs: imgs
             })
         }),
         {
