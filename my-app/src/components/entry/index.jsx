@@ -7,7 +7,10 @@ import useStore from '@/stores';
 import Chat from '../chat';
 import './style.less'
 // 预加载所有图片
-const imgModules = import.meta.glob('/src/assets/images/*', { eager: true });
+const imgModules = import.meta.glob('/src/assets/images/*', {
+    eager: true,
+    import: 'default'
+});
 
 const Entry = () => {
     const {setLocalImgs} = useStore();

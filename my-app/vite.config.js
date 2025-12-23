@@ -29,7 +29,12 @@ export default defineConfig((command, mode) => {
           // 代码分割
           chunkFileNames: 'assets/js/[name]-[hash].js',
           entryFileNames: 'assets/js/[name]-[hash].js',
-          assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
+          assetFileNames: assetInfo => {
+            if (/\.(png|jpe?g|gif|svg|webp|avif|ico)$/.test(assetInfo.name)) {
+              return 'assets/images/' + assetInfo.name.replace(/\.[^/.]+$/, '') + '-[hash][extname]';
+            }
+            return 'assets/[ext]/[name]-[hash].[ext]';
+          },
           manualChunks: {
             'react-vendor': ['react', 'react-dom', 'react-router-dom'],
             'ui-vendor': ['antd'], // UI 库
