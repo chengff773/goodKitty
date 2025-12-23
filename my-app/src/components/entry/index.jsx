@@ -9,7 +9,7 @@ import './style.less'
 // 预加载所有图片
 const imgModules = import.meta.glob('/src/assets/images/*', {
     eager: true,
-    import: 'default'
+    query: {url: 'true'}
 });
 
 const Entry = () => {
