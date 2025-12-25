@@ -13,7 +13,9 @@ const LocalImage = (props) => {
         alt = '',
         className = '',
         loading = 'lazy',
-        decoding = 'async'
+        decoding = 'async',
+        isImgLoaded = 'false',
+        setIsImgLoaded
     } = props;
 
     const {localImgs} = useStore();
@@ -47,7 +49,15 @@ const LocalImage = (props) => {
     }, [localImgs, imgName]);
 
     return (
-        <picture className={className}>
+        <picture
+            className={`
+                image-instance
+                ${className}
+            `}
+            style={{
+                opacity: isImgLoaded ? 1 : 0
+            }}
+        >
             <source srcSet={imgSet[`${name}.avif`]} type="image/avif" />
             <source srcSet={imgSet[`${name}.webp`]} type="image/webp" />
             <source srcSet={imgSet[`${name}.png`]} type="image/png" />
@@ -59,6 +69,7 @@ const LocalImage = (props) => {
                 style={{
                     width: '100%'
                 }}
+                onLoad={() => setIsImgLoaded(true)}
             />
         </picture>
     )

@@ -1,0 +1,43 @@
+.image-wrapper {
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        display: block;
+        padding-bottom: 100%;
+    }
+
+    .placeholder {
+        position: absolute;
+        inset: 0;
+        background-color: #f0f0f0;
+        animation: 'shimmer 2s infinite linear'
+    }
+
+    .image {
+        position: absolute;
+        inset: 0;
+
+        &-instance {
+            transition: opacity .3s ease;
+            will-change: opacity;
+            object-fit: cover;
+        }
+
+        &-lqip {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            will-change: opacity;
+            object-fit: cover;
+            transition: opacity .35s ease;
+            filter: blur(10);
+        }
+    }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}

@@ -13,7 +13,11 @@ const WelcomeMsg = () => {
     } = useStore();
 
     return (<div className='welcome-card'>
-        <Image className='welcome-img' imgName='logo.png' />
+        <Image
+            className='welcome-img'
+            imgName='logo.png'
+            lqipSrc="src/assets/images/logo-tiny.png"
+        />
         <div className='welcome-msg'>
             <div>kitty kitty，很高兴为您服务</div>
             <div>我是您的专属助手小宝</div>
