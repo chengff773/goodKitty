@@ -48,17 +48,6 @@ const CustomImage = (props) => {
 
     return (
         <div className={`image-wrapper ${className}`}>
-            {lqipSrc
-                ? <img
-                    src={lqipSrc}
-                    className='image-lqip'
-                    loading='eager'
-                    style={lqipStyle}
-                />
-                : <>
-                    {isImgLoaded ? null : <div className='placeholder'></div>}
-                </>
-            }
             <div
                 className='image-instance'
                 style={{
@@ -71,6 +60,17 @@ const CustomImage = (props) => {
                     setIsImgLoaded={setIsImgLoaded}
                 />
             </div>
+            {lqipSrc
+                ? <img
+                    src={lqipSrc}
+                    className='image-lqip'
+                    loading='eager'
+                    style={lqipStyle}
+                />
+                : <>
+                    {isImgLoaded ? null : <div className='placeholder'></div>}
+                </>
+            }
         </div>
     )
 }
