@@ -5,6 +5,7 @@
 import {WarningOutlined} from '@ant-design/icons';
 import useStore from "@/stores";
 import Image from '@/appComponents/Image';
+import placeholderImg from '@/assets/images/logo-tiny.png';
 import './style.less';
 
 const WelcomeMsg = () => {
@@ -16,7 +17,7 @@ const WelcomeMsg = () => {
         <Image
             className='welcome-img'
             imgName='logo.png'
-            lqipSrc="src/assets/images/logo-tiny.png"
+            lqipSrc={placeholderImg}
         />
         <div className='welcome-msg'>
             <div>kitty kitty，很高兴为您服务</div>
