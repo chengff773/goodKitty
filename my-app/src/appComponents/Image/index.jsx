@@ -27,6 +27,7 @@ const CustomImage = (props) => {
     const [isImgLoaded, setIsImgLoaded] = useState(false);
     const [lqipStyle, setLqipStyle] = useState({});
     const timerRef = useRef(null);
+    const hasLoaded = useRef(false);
 
     function ComponentIs(props) {
         if (imgName) {
@@ -36,13 +37,16 @@ const CustomImage = (props) => {
     }
 
     useEffect(() => {
-        if (isImgLoaded) {
+        if (isImgLoaded && !hasLoaded.current) {
+            hasLoaded.current = true;
             timerRef.current = setTimeout(() => {
                 setLqipStyle({opacity: 0});
-            }, 300);
+            }, 200);
         }
         return () => {
-            clearTimeout(timerRef.current);
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
         }
     }, [isImgLoaded]);
 
