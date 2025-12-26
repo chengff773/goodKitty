@@ -39,7 +39,7 @@ const CustomImage = (props) => {
         if (isImgLoaded) {
             timerRef.current = setTimeout(() => {
                 setLqipStyle({opacity: 0});
-            }, 100);
+            }, 300);
         }
         return () => {
             clearTimeout(timerRef.current);
