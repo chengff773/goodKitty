@@ -2,7 +2,7 @@
  * @file 自定义图片组件
  */
 
-import {useState} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import LocalImage from './components/localImage';
 import WebImage from './components/webImage';
 import './style.less';
@@ -25,6 +25,8 @@ const CustomImage = (props) => {
     } = props;
 
     const [isImgLoaded, setIsImgLoaded] = useState(false);
+    const [lqipStyle, setLqipStyle] = useState({});
+    const timerRef = useRef(null);
 
     function ComponentIs(props) {
         if (imgName) {
@@ -33,6 +35,17 @@ const CustomImage = (props) => {
         return <WebImage {...props} />
     }
 
+    useEffect(() => {
+        if (isImgLoaded) {
+            timerRef.current = setTimeout(() => {
+                setLqipStyle({opacity: 0});
+            }, 100);
+        }
+        return () => {
+            clearTimeout(timerRef.current);
+        }
+    }, [isImgLoaded]);
+
     return (
         <div className={`image-wrapper ${className}`}>
             {lqipSrc
@@ -40,6 +53,7 @@ const CustomImage = (props) => {
                     src={lqipSrc}
                     className='image-lqip'
                     loading='eager'
+                    style={lqipStyle}
                 />
                 : <>
                     {isImgLoaded ? null : <div className='placeholder'></div>}
