@@ -14,17 +14,24 @@ import './style.less';
  * alt: 图片的alt属性
  * loading: 图片加载方式，默认lazy
  * decoding: 图片解码方式，默认async
- * lqipSrc: 渲染优化，图片的LQIP地址
+ * lqipSrc: 渲染优化，图片的LQIP src
  * @returns 
  */
 const CustomImage = (props) => {
     const {
         imgName = '',
         className = '',
-        lqipSrc = ''
+        lqipSrc = null
     } = props;
 
     const [isImgLoaded, setIsImgLoaded] = useState(false);
+
+    function ComponentIs(props) {
+        if (imgName) {
+            return <LocalImage {...props} />;
+        }
+        return <WebImage {...props} />
+    }
 
     return (
         <div className={`image-wrapper ${className}`}>
@@ -32,6 +39,7 @@ const CustomImage = (props) => {
                 ? <img
                     src={lqipSrc}
                     className='image-lqip'
+                    loading='eager'
                     style={{
                         opacity: isImgLoaded ? 0 : 1
                     }}
@@ -40,15 +48,17 @@ const CustomImage = (props) => {
                     {isImgLoaded ? null : <div className='placeholder'></div>}
                 </>
             }
-            <div className='image'>
-                {imgName
-                    ? <LocalImage
-                        {...props}
-                        isImgLoaded={isImgLoaded}
-                        setIsImgLoaded={setIsImgLoaded}
-                    />
-                    : <WebImage {...props} />
-                }
+            <div
+                className='image-instance'
+                style={{
+                    opacity: isImgLoaded ? 1 : 0
+                }}
+            >
+                <ComponentIs
+                    {...props}
+                    isImgLoaded={isImgLoaded}
+                    setIsImgLoaded={setIsImgLoaded}
+                />
             </div>
         </div>
     )

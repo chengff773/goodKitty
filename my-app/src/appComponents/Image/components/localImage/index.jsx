@@ -14,7 +14,6 @@ const LocalImage = (props) => {
         className = '',
         loading = 'lazy',
         decoding = 'async',
-        isImgLoaded = 'false',
         setIsImgLoaded
     } = props;
 
@@ -49,15 +48,7 @@ const LocalImage = (props) => {
     }, [localImgs, imgName]);
 
     return (
-        <picture
-            className={`
-                image-instance
-                ${className}
-            `}
-            style={{
-                opacity: isImgLoaded ? 1 : 0
-            }}
-        >
+        <picture className={className}>
             <source srcSet={imgSet[`${name}.avif`]} type="image/avif" />
             <source srcSet={imgSet[`${name}.webp`]} type="image/webp" />
             <source srcSet={imgSet[`${name}.png`]} type="image/png" />
