@@ -40,9 +40,6 @@ const CustomImage = (props) => {
                     src={lqipSrc}
                     className='image-lqip'
                     loading='eager'
-                    style={{
-                        opacity: isImgLoaded ? 0 : 1
-                    }}
                 />
                 : <>
                     {isImgLoaded ? null : <div className='placeholder'></div>}
