@@ -37,18 +37,21 @@ const CustomImage = (props) => {
     }
 
     useEffect(() => {
-        if (isImgLoaded && !hasLoaded.current) {
-            hasLoaded.current = true;
-            timerRef.current = setTimeout(() => {
-                setLqipStyle({opacity: 0});
-            }, 200);
-        }
-        return () => {
-            if (timerRef.current) {
-                clearTimeout(timerRef.current);
+        if (lqipSrc) {
+            // 有图片优化时，延迟隐藏LQIP图片
+            if (isImgLoaded && !hasLoaded.current) {
+                hasLoaded.current = true;
+                timerRef.current = setTimeout(() => {
+                    setLqipStyle({opacity: 0});
+                }, 200);
+            }
+            return () => {
+                if (timerRef.current) {
+                    clearTimeout(timerRef.current);
+                }
             }
         }
-    }, [isImgLoaded]);
+    }, [isImgLoaded, lqipSrc]);
 
     return (
         <div className={`image-wrapper ${className}`}>
