@@ -1,0 +1,31 @@
+.left-menu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 15px;
+    transition: all 0.3s;
+    z-index: 1;
+
+    &-hide {
+        transform: translateX(-100%);
+    }
+
+    &-show {
+        transform: translateX(0);
+    }
+
+    .menu-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 20px;
+        white-space: nowrap;
+
+        a {
+            text-decoration: none;
+            color: #000;
+        }
+    }
+}

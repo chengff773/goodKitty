@@ -1,24 +1,19 @@
-@import 'tailwindcss/tailwind.css';
+.entry {
+    display: flex;
+    .menu-box {
+        position: relative;
+        padding: 10px;
+        height: 100vh;
 
-:root {
-    --primary-color: #4361ee;
-    --secondary-color: #3a0ca3;
-    --background-color: #f8f9fa;
-    --surface-color: #ffffff;
-    --text-primary: #212529;
-    --text-secondary: #6c757d;
-    --border-color: #e9ecef;
-    --user-message-bg: #e7f1ff;
-    --agent-message-bg: #f1f3f4;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    --radius: 8px;
-    --excel-color: #00b050;
-    --excel-background: #00b05010;
-}
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    .content-box {
+        flex-grow: 1;
+    }
 }
