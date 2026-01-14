@@ -2,7 +2,7 @@
  * @file 自定义图片组件
  */
 
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, useMemo, memo} from 'react';
 import LocalImage from './components/localImage';
 import WebImage from './components/webImage';
 import './style.less';
@@ -17,7 +17,7 @@ import './style.less';
  * lqipSrc: 渲染优化，图片的LQIP src
  * @returns 
  */
-const CustomImage = (props) => {
+const CustomImage = memo((props) => {
     const {
         imgName = '',
         className = '',
@@ -28,13 +28,6 @@ const CustomImage = (props) => {
     const [lqipStyle, setLqipStyle] = useState({});
     const timerRef = useRef(null);
     const hasLoaded = useRef(false);
-
-    function ComponentIs(props) {
-        if (imgName) {
-            return <LocalImage {...props} />;
-        }
-        return <WebImage {...props} />
-    }
 
     useEffect(() => {
         if (lqipSrc) {
@@ -61,11 +54,15 @@ const CustomImage = (props) => {
                     opacity: isImgLoaded ? 1 : 0
                 }}
             >
-                <ComponentIs
-                    {...props}
-                    isImgLoaded={isImgLoaded}
-                    setIsImgLoaded={setIsImgLoaded}
-                />
+                {imgName ? (
+                    <LocalImage
+                        {...props}
+                        isImgLoaded={isImgLoaded}
+                        setIsImgLoaded={setIsImgLoaded}
+                    />
+                ) : (
+                    <WebImage {...props} />
+                )}
             </div>
             {lqipSrc
                 ? <img
@@ -80,6 +77,14 @@ const CustomImage = (props) => {
             }
         </div>
     )
-}
+}, (prevProps, nextProps) => {
+    // 自定义比较函数，只有当关键属性变化时才重新渲染
+    return prevProps.imgName === nextProps.imgName 
+        && prevProps.imgUrl === nextProps.imgUrl
+        && prevProps.className === nextProps.className
+        && prevProps.lqipSrc === nextProps.lqipSrc;
+});
+
+CustomImage.displayName = 'CustomImage';
 
 export default CustomImage;

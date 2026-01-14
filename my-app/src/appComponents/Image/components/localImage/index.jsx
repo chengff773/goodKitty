@@ -2,12 +2,12 @@
  * @file 静态图片组件
  */
 
-import {useEffect, useState} from 'react';
+import {useMemo, memo} from 'react';
 import useStore from '@/stores';
 const IMG_BASE_URL = '/src/assets/images/';
 const IMG_TYPE = ['png', 'webp', 'avif'];
 
-const LocalImage = (props) => {
+const LocalImage = memo((props) => {
     const {
         imgName = '',
         alt = '',
@@ -18,34 +18,34 @@ const LocalImage = (props) => {
     } = props;
 
     const {localImgs} = useStore();
-    const [imgSet, setImgSet] = useState({});
-
     const name = imgName.split('.')[0];
 
-    useEffect(() => {
-        if (localImgs && imgName) {
-            const imgSet = {};
-            const originImgUrl = IMG_BASE_URL + imgName;
-            const imgUrl = IMG_BASE_URL + imgName.split('.')[0];
-            IMG_TYPE.forEach(type => {
-                const img = localImgs[`${imgUrl}.${type}`];
-                if (img) {
-                    imgSet[`${name}.${type}`] = img.default;
-                }
-                else {
-                    console.log('cannot find img: ', `${imgUrl}.${type}`);
-                }
-            });
-            if (
-                imgName.split('.')[1]
-                && !IMG_TYPE.includes(imgName.split('.')[1])
-                && localImgs[originImgUrl]
-            ) {
-                imgSet[imgName] = localImgs[originImgUrl].default;
-            }
-            setImgSet(imgSet);
+    // 使用 useMemo 缓存 imgSet，避免每次渲染都创建新对象
+    const imgSet = useMemo(() => {
+        if (!localImgs || !imgName) {
+            return {};
         }
-    }, [localImgs, imgName]);
+        const result = {};
+        const originImgUrl = IMG_BASE_URL + imgName;
+        const imgUrl = IMG_BASE_URL + imgName.split('.')[0];
+        IMG_TYPE.forEach(type => {
+            const img = localImgs[`${imgUrl}.${type}`];
+            if (img) {
+                result[`${name}.${type}`] = img.default;
+            }
+            else {
+                console.log('cannot find img: ', `${imgUrl}.${type}`);
+            }
+        });
+        if (
+            imgName.split('.')[1]
+            && !IMG_TYPE.includes(imgName.split('.')[1])
+            && localImgs[originImgUrl]
+        ) {
+            result[imgName] = localImgs[originImgUrl].default;
+        }
+        return result;
+    }, [localImgs, imgName, name]);
 
     return (
         <picture className={className}>
@@ -64,6 +64,16 @@ const LocalImage = (props) => {
             />
         </picture>
     )
-}
+}, (prevProps, nextProps) => {
+    // 只有当关键属性变化时才重新渲染
+    // 注意：isImgLoaded 和 setIsImgLoaded 是函数，每次都是新引用，所以不比较它们
+    return prevProps.imgName === nextProps.imgName
+        && prevProps.alt === nextProps.alt
+        && prevProps.className === nextProps.className
+        && prevProps.loading === nextProps.loading
+        && prevProps.decoding === nextProps.decoding;
+});
+
+LocalImage.displayName = 'LocalImage';
 
 export default LocalImage;
